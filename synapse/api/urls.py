@@ -19,8 +19,6 @@ import hmac
 from hashlib import sha256
 from urllib.parse import urlencode
 
-from synapse.config import ConfigError
-
 SYNAPSE_CLIENT_API_PREFIX = "/_synapse/client"
 CLIENT_API_PREFIX = "/_matrix/client"
 FEDERATION_PREFIX = "/_matrix/federation"
