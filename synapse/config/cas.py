@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ._base import Config
+from ._base import Config, ConfigError
 
 
 class CasConfig(Config):
@@ -30,9 +30,17 @@ class CasConfig(Config):
 
         if self.cas_enabled:
             self.cas_server_url = cas_config["server_url"]
+
+            # If the service_url is given, use it for backwards compatibility.
+            # Otherwise, use the public_baseurl.
             public_base_url = cas_config.get("service_url") or self.public_baseurl
+            if not public_base_url:
+                raise ConfigError("cas_config requires a public_baseurl to be set")
+
+            # If the service_url was given, ensure it doesn't have an extra slash.
             if public_base_url[-1] != "/":
                 public_base_url += "/"
+
             # TODO Update this to a _synapse URL.
             self.cas_service_url = (
                 public_base_url + "_matrix/client/r0/login/cas/ticket"
