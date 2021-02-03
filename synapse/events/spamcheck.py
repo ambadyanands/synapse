@@ -234,7 +234,7 @@ class SpamChecker:
                 self, file: ReadableFileWrapper, file_info: FileInfo
             ) -> bool:
                 buffer = BytesIO()
-                await file.write_to_io(buffer)
+                await file.write_chunks_to(buffer.write)
 
                 if bytes.getvalue() == b"Hello World":
                     return True

@@ -16,7 +16,7 @@ import contextlib
 import logging
 import os
 import shutil
-from typing import IO, TYPE_CHECKING, Any, BinaryIO, Optional, Sequence
+from typing import IO, TYPE_CHECKING, Any, Callable, Optional, Sequence
 
 import attr
 
@@ -329,7 +329,7 @@ class SpamMediaException(NotFoundError):
 @attr.s(slots=True)
 class ReadableFileWrapper:
     """Wrapper that allows reading a file in chunks, yielding to the reactor,
-    and writing to an IO stream.
+    and writing to a callback.
 
     This is simplified `FileSender` that takes an IO object rather than an
     `IConsumer`.
@@ -340,8 +340,8 @@ class ReadableFileWrapper:
     clock = attr.ib(type=Clock)
     path = attr.ib(type=str)
 
-    async def write_to_io(self, io: BinaryIO):
-        """Read the file and write to the IO object.
+    async def write_chunks_to(self, callback: Callable[[bytes], None]):
+        """Reads the file in chunks and calls the callback with each chunk.
         """
 
         with open(self.path, "rb") as file:
@@ -350,10 +350,7 @@ class ReadableFileWrapper:
                 if not chunk:
                     break
 
-                bytes_written = 0
+                callback(chunk)
 
-                while bytes_written < len(chunk):
-                    bytes_written += io.write(chunk[bytes_written:])
-
-                    # We yield to the reactor by sleeping for 0 seconds.
-                    await self.clock.sleep(0)
+                # We yield to the reactor by sleeping for 0 seconds.
+                await self.clock.sleep(0)

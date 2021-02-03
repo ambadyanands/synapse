@@ -432,7 +432,7 @@ class TestSpamChecker:
 
     async def check_media_file_for_spam(self, file_wrapper, file_info) -> bool:
         buf = BytesIO()
-        await file_wrapper.write_to_io(buf)
+        await file_wrapper.write_chunks_to(buf.write)
 
         return b"evil" in buf.getvalue()
 
