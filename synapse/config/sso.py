@@ -31,8 +31,6 @@ class SSOConfig(Config):
 
         # Read templates from disk
         (
-            self.sso_login_idp_picker_template,
-            self.sso_redirect_confirm_template,
             self.sso_auth_confirm_template,
             self.sso_error_template,
             sso_account_deactivated_template,
@@ -40,8 +38,6 @@ class SSOConfig(Config):
             self.sso_auth_bad_user_template,
         ) = self.read_templates(
             [
-                "sso_login_idp_picker.html",
-                "sso_redirect_confirm.html",
                 "sso_auth_confirm.html",
                 "sso_error.html",
                 "sso_account_deactivated.html",
@@ -50,6 +46,21 @@ class SSOConfig(Config):
             ],
             self.sso_template_dir,
         )
+
+        # The following templates require a public baseurl since they use the
+        # mxc_to_http filter.
+        #
+        # Note that any situation where these templates get used will check that
+        # public_baseurl is set already.
+        self.sso_login_idp_picker_template = None
+        if self.public_baseurl:
+            (
+                self.sso_login_idp_picker_template,
+                self.sso_redirect_confirm_template,
+            ) = self.read_templates(
+                ["sso_login_idp_picker.html", "sso_redirect_confirm.html"],
+                self.sso_template_dir,
+            )
 
         # These templates have no placeholders, so render them here
         self.sso_account_deactivated_template = (
