@@ -236,7 +236,7 @@ class SpamChecker:
                 buffer = BytesIO()
                 await file.write_chunks_to(buffer.write)
 
-                if bytes.getvalue() == b"Hello World":
+                if buffer.getvalue() == b"Hello World":
                     return True
 
                 return False
