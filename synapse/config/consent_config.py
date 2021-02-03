@@ -93,6 +93,12 @@ class ConsentConfig(Config):
 
         if consent_config is None:
             return
+
+        if self.form_secret is None:
+            raise ConfigError("form_secret not set in config")
+        if self.public_baseurl is None:
+            raise ConfigError("public_baseurl not set in config")
+
         self.user_consent_version = str(consent_config["version"])
         self.user_consent_template_dir = self.abspath(consent_config["template_dir"])
         if not path.isdir(self.user_consent_template_dir):
