@@ -1474,7 +1474,7 @@ class AuthHandler(BaseHandler):
         # URL we redirect users to.
         redirect_url_no_params = client_redirect_url.split("?")[0]
 
-        assert self._sso_redirect_confirm_template
+        assert self._sso_redirect_confirm_template is not None
 
         html = self._sso_redirect_confirm_template.render(
             display_url=redirect_url_no_params,

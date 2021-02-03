@@ -75,7 +75,7 @@ class PickIdpResource(DirectServeHtmlResource):
         self, request: SynapseRequest, client_redirect_url: str
     ) -> None:
         # The template should exist, but make sure.
-        assert self.sso_login_idp_picker_template
+        assert self._sso_login_idp_picker_template is not None
 
         # otherwise, serve up the IdP picker
         providers = self._sso_handler.get_identity_providers()

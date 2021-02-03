@@ -12,7 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+
+import jinja2
 
 from ._base import Config
 
@@ -52,7 +54,8 @@ class SSOConfig(Config):
         #
         # Note that any situation where these templates get used will check that
         # public_baseurl is set already.
-        self.sso_login_idp_picker_template = None
+        self.sso_login_idp_picker_template = None  # type: Optional[jinja2.Template]
+        self.sso_redirect_confirm_template = None  # type: Optional[jinja2.Template]
         if self.public_baseurl:
             (
                 self.sso_login_idp_picker_template,
