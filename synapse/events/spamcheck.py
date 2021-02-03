@@ -255,8 +255,9 @@ class SpamChecker:
             # For backwards compatibility, only run if the method exists on the
             # spam checker
             checker = getattr(spam_checker, "check_media_file_for_spam", None)
-            spam = await maybe_awaitable(checker(file_wrapper, file_info))
-            if spam:
-                return True
+            if checker:
+                spam = await maybe_awaitable(checker(file_wrapper, file_info))
+                if spam:
+                    return True
 
         return False
